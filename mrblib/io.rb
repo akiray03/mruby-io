@@ -113,17 +113,17 @@ class IO
   end
 
   def eof?
-    return true if @buf && @buf.size > 0
+    return false if @buf && @buf.size > 0
 
     ret = false
     char = ''
 
     begin
-      char = sysread(1)
-    rescue EOFError => e
+      char = _read_buf(1)
+    rescue EOFError, IOError => e
       ret = true
     ensure
-      _ungets(char)
+      _ungets(char) rescue nil
     end
 
     ret
@@ -147,9 +147,9 @@ class IO
     0
   end
 
-  def _read_buf
+  def _read_buf(size = BUF_SIZE)
     return @buf if @buf && @buf.size > 0
-    @buf = sysread(BUF_SIZE)
+    @buf = sysread(size)
   end
 
   def _ungets(substr)

@@ -50,12 +50,10 @@ end
 #assert('IO#each_line', '15.2.20.5.5') do
 
 assert('IO#eof?', '15.2.20.5.6') do
+  # small size
   io = IO.new(IO.sysopen($mrbtest_io_rfname))
-  $mrbtest_io_msg.each_char { |ch|
-    # XXX
-    #assert_false io.eof?
-    io.getc
-  }
+  assert_false io.eof?
+  io.gets
   assert_true io.eof?
   io.close
   true
